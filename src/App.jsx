@@ -21,12 +21,9 @@ function App() {
     setImages(prevImages => {
       return [...prevImages, res];
     });
-    console.log(images);
   }
 
   async function getImages(searchRequest, currentPage) {
-    console.log(images);
-
     try {
       setPage(1);
       setImages([]);
@@ -49,7 +46,7 @@ function App() {
         onQuery={setQuery}
       />
 
-      {/* <ImageGallery images={images} /> */}
+      <ImageGallery images={images} />
       {loader && (
         <div className="loader">
           <ColorRing className="loader" />
