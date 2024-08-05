@@ -13,17 +13,22 @@ function App() {
   const [query, setQuery] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [showBtn, setShowBtn] = useState(false);
 
-  useEffect(() => {}, [page, query]);
+  useEffect(() => {
+    console.log(page);
+    console.log(page);
+    async function loadMoreImages(searchRequest, currentPage) {
+      const res = await fetchImages(searchRequest, currentPage);
+      setImages(prevImages => {
+        return [...prevImages, res];
+      });
+    }
+    if (!query) return;
+    loadMoreImages(search, page);
+  }, [page, query, search]);
 
-  async function loadMoreImages(searchRequest, currentPage) {
-    const res = await fetchImages(searchRequest, currentPage);
-    setImages(prevImages => {
-      return [...prevImages, res];
-    });
-  }
-
-  async function getImages(searchRequest, currentPage) {
+  async function searchImages(searchRequest, currentPage) {
     try {
       setPage(1);
       setImages([]);
@@ -31,6 +36,7 @@ function App() {
       setLoader(true);
       const res = await fetchImages(searchRequest, currentPage);
       setImages(res);
+      setShowBtn(true);
     } catch (err) {
       setError(true);
     } finally {
@@ -41,9 +47,9 @@ function App() {
   return (
     <>
       <SearchBar
-        onSearch={getImages}
+        onSearch={searchImages}
         setSearch={setSearch}
-        onQuery={setQuery}
+        setShowBtn={setShowBtn}
       />
 
       <ImageGallery images={images} />
@@ -53,11 +59,13 @@ function App() {
         </div>
       )}
       {error && <p>Internal server error</p>}
-      {query && (
+      {showBtn && (
         <LoadMoreBtn
-          loadMoreImages={loadMoreImages}
+          // loadMoreImages={loadMoreImages}
           page={page}
           search={search}
+          setPage={setPage}
+          setQuery={setQuery}
         />
       )}
     </>

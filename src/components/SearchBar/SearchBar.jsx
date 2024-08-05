@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 import css from './SearchBar.module.css';
-function SearchBar({ onSearch, setSearch, onQuery }) {
+function SearchBar({ onSearch, setSearch }) {
   function handleSubmit(e) {
     e.preventDefault();
     setSearch(e.target.searchData.value);
     onSearch(e.target.searchData.value);
-    onQuery(true);
   }
   return (
     <header className={css.header}>

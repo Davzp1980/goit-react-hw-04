@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-function LoadMoreBtn({ loadMoreImages, page, search }) {
+function LoadMoreBtn({ loadMoreImages, page, search, setPage, setQuery }) {
   function handleClick() {
-    page += 1;
-    loadMoreImages(search, page);
+    setPage(page + 1);
+    setQuery(true);
+    // loadMoreImages(search, page);
   }
   return (
     <button type="button" onClick={handleClick}>
