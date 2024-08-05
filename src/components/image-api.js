@@ -18,5 +18,5 @@ export async function fetchImages(searchRequest, currentPage) {
     },
   });
 
-  return res.data.results;
+  return res.data;
 }

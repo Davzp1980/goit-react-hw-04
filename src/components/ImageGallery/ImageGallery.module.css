@@ -4,9 +4,9 @@
   justify-content: center;
   gap: 10px;
   list-style-type: none;
+  margin-bottom: 15px;
 }
 
 .li {
   cursor: pointer;
-  width: 250px;
 }
