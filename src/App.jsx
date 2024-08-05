@@ -67,7 +67,11 @@ function App() {
       setLoader(false);
     }
   }
-  // Modal.setAppElement(el);
+  function onLoadMoreBtn() {
+    setPage(page + 1);
+    setQuery(true);
+    setLoader(true);
+  }
   return (
     <>
       <ImageModal
@@ -88,16 +92,7 @@ function App() {
         </div>
       )}
       {error && <p>Internal server error</p>}
-      {showBtn && (
-        <LoadMoreBtn
-          // loadMoreImages={loadMoreImages}
-          page={page}
-          search={search}
-          setPage={setPage}
-          setQuery={setQuery}
-          setLoader={setLoader}
-        />
-      )}
+      {showBtn && <LoadMoreBtn onLoadMoreBtn={onLoadMoreBtn} />}
     </>
   );
 }

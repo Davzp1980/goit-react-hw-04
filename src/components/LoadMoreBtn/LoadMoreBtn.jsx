@@ -1,16 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import css from './LoadMoreBtn.module.css';
-function LoadMoreBtn({ page, setPage, setQuery, setLoader }) {
-  function handleClick() {
-    setPage(page + 1);
-    setQuery(true);
-    setLoader(true);
-    // loadMoreImages(search, page);
-  }
+function LoadMoreBtn({ onLoadMoreBtn }) {
   return (
     <div className={css.div}>
-      <button className={css.btn} type="button" onClick={handleClick}>
+      <button className={css.btn} type="button" onClick={onLoadMoreBtn}>
         Load more
       </button>
     </div>
