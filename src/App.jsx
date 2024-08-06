@@ -6,12 +6,12 @@ import ImageGallery from './components/ImageGallery/ImageGallery';
 import { ColorRing } from 'react-loader-spinner';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './components/ImageModal/ImageModal';
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [images, setImages] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [error, setError] = useState(false);
-  const [query, setQuery] = useState(false);
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [showBtn, setShowBtn] = useState(false);
@@ -23,6 +23,33 @@ function App() {
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
+  const errorMessage = () => {
+    toast('Internal server error', {
+      duration: 4000,
+      position: 'top-left',
+      style: {
+        backgroundColor: 'red',
+      },
+    });
+  };
+  const blankSearchFieldMessage = () => {
+    toast('The search field must be filled in', {
+      duration: 4000,
+      position: 'top-right',
+      style: {
+        backgroundColor: 'chartreuse',
+      },
+    });
+  };
+  const badSearchRequestMessage = () => {
+    toast('No photos were found for your request', {
+      duration: 4000,
+      position: 'top-right',
+      style: {
+        backgroundColor: 'teal',
+      },
+    });
+  };
   function openModal() {
     setIsOpen(true);
   }
@@ -30,47 +57,46 @@ function App() {
     setIsOpen(false);
   }
   useEffect(() => {
-    async function loadMoreImages(searchRequest, currentPage) {
+    if (search === '') return;
+    async function loadImages(searchRequest, currentPage) {
+      setLoader(true);
       try {
         const res = await fetchImages(searchRequest, currentPage);
         setImages(prevImages => {
           return [...prevImages, ...res.results];
         });
+
+        setTotalPages(res.total_pages);
+        if (res.total_pages === 0) {
+          badSearchRequestMessage();
+          return;
+        }
+
+        setShowBtn(true);
       } catch (err) {
-        setError(true);
+        errorMessage();
       } finally {
         setLoader(false);
       }
     }
-    if (!query) return;
-    loadMoreImages(search, page);
-  }, [page, query, search]);
+
+    loadImages(search, page);
+  }, [page, search]);
 
   useEffect(() => {
     if (totalPages === page) {
       setShowBtn(false);
     }
   }, [totalPages, page]);
-  async function searchImages(searchRequest, currentPage) {
-    try {
-      setPage(1);
-      setImages([]);
-      setError(false);
-      setLoader(true);
-      const res = await fetchImages(searchRequest, currentPage);
-      setImages(res.results);
-      setShowBtn(true);
-      setTotalPages(res.total_pages);
-    } catch (err) {
-      setError(true);
-    } finally {
-      setLoader(false);
-    }
+
+  async function searchImages(searchRequest) {
+    setPage(1);
+    setImages([]);
+
+    setSearch(searchRequest);
   }
   function onLoadMoreBtn() {
     setPage(page + 1);
-    setQuery(true);
-    setLoader(true);
   }
   return (
     <>
@@ -79,7 +105,10 @@ function App() {
         modalIsOpen={modalIsOpen}
         imageModal={imageModal}
       />
-      <SearchBar onSearch={searchImages} setSearch={setSearch} />
+      <SearchBar
+        searchImages={searchImages}
+        blankSearchFieldMessage={blankSearchFieldMessage}
+      />
 
       <ImageGallery
         images={images}
@@ -91,8 +120,9 @@ function App() {
           <ColorRing className="loader" />
         </div>
       )}
-      {error && <p>Internal server error</p>}
+
       {showBtn && <LoadMoreBtn onLoadMoreBtn={onLoadMoreBtn} />}
+      <Toaster />
     </>
   );
 }

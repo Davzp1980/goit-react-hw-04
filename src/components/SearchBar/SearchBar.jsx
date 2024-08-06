@@ -1,11 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import css from './SearchBar.module.css';
-function SearchBar({ onSearch, setSearch }) {
+function SearchBar({ searchImages, blankSearchFieldMessage }) {
   function handleSubmit(e) {
     e.preventDefault();
-    setSearch(e.target.searchData.value);
-    onSearch(e.target.searchData.value);
+
+    if (e.target.searchData.value === '') {
+      blankSearchFieldMessage();
+      return;
+    }
+    searchImages(e.target.searchData.value);
     setInputValue('');
   }
 
@@ -23,11 +27,7 @@ function SearchBar({ onSearch, setSearch }) {
             setInputValue(e.target.value);
           }}
         />
-        <button
-          className={css.btn}
-          disabled={!inputValue && true}
-          type="submit"
-        >
+        <button className={css.btn} type="submit">
           Search
         </button>
       </form>
