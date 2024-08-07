@@ -6,7 +6,12 @@ import ImageGallery from './components/ImageGallery/ImageGallery';
 import { ColorRing } from 'react-loader-spinner';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './components/ImageModal/ImageModal';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import {
+  errorMessage,
+  badSearchRequestMessage,
+  blankSearchFieldMessage,
+} from './components/helpers/messages';
 
 function App() {
   const [images, setImages] = useState([]);
@@ -23,33 +28,6 @@ function App() {
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  const errorMessage = () => {
-    toast('Internal server error', {
-      duration: 4000,
-      position: 'top-left',
-      style: {
-        backgroundColor: 'red',
-      },
-    });
-  };
-  const blankSearchFieldMessage = () => {
-    toast('The search field must be filled in', {
-      duration: 4000,
-      position: 'top-right',
-      style: {
-        backgroundColor: 'chartreuse',
-      },
-    });
-  };
-  const badSearchRequestMessage = () => {
-    toast('No photos were found for your request', {
-      duration: 4000,
-      position: 'top-right',
-      style: {
-        backgroundColor: 'teal',
-      },
-    });
-  };
   function openModal() {
     setIsOpen(true);
   }
