@@ -18,7 +18,7 @@ function App() {
   const [loader, setLoader] = useState(false);
 
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(null);
   const [showBtn, setShowBtn] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [imageModal, setImageUrl] = useState({
@@ -35,7 +35,7 @@ function App() {
     setIsOpen(false);
   }
   useEffect(() => {
-    if (search === '') return;
+    if (search === null) return;
     async function loadImages(searchRequest, currentPage) {
       setLoader(true);
       try {
